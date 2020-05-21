@@ -1,0 +1,26 @@
+{
+  "name": "koa-serve",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "nodemon": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.8.1",
+    "koa-body": "^4.1.1",
+    "koa-bodyparser": "^4.2.1",
+    "koa-jwt": "^4.0.0",
+    "koa-router": "^7.4.0",
+    "moment": "^2.25.3",
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.10",
+    "sequelize-cli": "^5.5.1"
+  }
+}
