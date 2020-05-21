@@ -1,8 +1,9 @@
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
 const loadRouter = require('./routes')
+const cors = require('koa2-cors')
 const db = require('./models')
-const { PORT } = require('./config')
+const {PORT} = require('./config')
 
 const app = new Koa()
 
@@ -13,14 +14,14 @@ Object.keys(context).forEach(key => {
 })
 
 //请求体解析中间件
-app.use(bodyParser())
+app.use(cors()).use(bodyParser())
 
 //加载全部路由
 loadRouter(app)
 
 app.listen(PORT, () => {
     db.sequelize
-        .sync({ force: false }) // If force is true, each DAO will do DROP TABLE IF EXISTS ..., before it tries to create its own table
+        .sync({force: false}) // If force is true, each DAO will do DROP TABLE IF EXISTS ..., before it tries to create its own table
         .then(async () => {
             console.log('sequelize connect success')
             console.log(`sever listen on http://127.0.0.1:${PORT}`)

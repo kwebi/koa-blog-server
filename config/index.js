@@ -20,7 +20,8 @@ const config = {
             },
             timezone: '+08:00'
         }
-    }
+    },
+    SALT_WORK_FACTOR:"1213243249082"
 }
 
 module.exports = config

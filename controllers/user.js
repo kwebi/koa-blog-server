@@ -1,5 +1,5 @@
 const Joi = require('joi')
-
+const {encrypt,comparePassword} = require('../utils/bcrypt')
 const { user: UserModel } = require('../models')
 
 
@@ -15,7 +15,8 @@ class UserController {
             if (user) {
                 ctx.throw(403, '用户名已被占用')
             } else {
-                const saltPassword = password //TODO
+                //加密后存入数据库
+                const saltPassword = await encrypt(password)
                 await UserModel.create({ username, password: saltPassword })
                 // ctx.client(200, '注册成功')
                 ctx.status = 204
@@ -38,7 +39,7 @@ class UserController {
                 // ctx.client(403, '用户不存在')
                 ctx.throw(403, '用户不存在')
             }else {
-                const isMatch = password === user.password
+                const isMatch = await comparePassword(password,user.password)
                 if (!isMatch) {
                     // ctx.client(403, '密码不正确')
                     ctx.throw(403, '密码不正确')
