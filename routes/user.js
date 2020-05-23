@@ -8,7 +8,7 @@ const router = new Router()
  * @desc 注册
  * @access 公开
  */
-router.post("/api/v1/register", register)
-router.post("/api/v1/login",defaultLogin)
+router.post("/register", register)
+router.post("/login",defaultLogin)
 
 module.exports = router

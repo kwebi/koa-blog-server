@@ -1,12 +1,8 @@
-const Joi = require("joi")
+const Joi = require("@hapi/joi")
 
 function validate(params = {}, schama = {}) {
-    const ctx = this
-    const validator = Joi.validate(params, Joi.object(schama), {
-        allowUnknown: true
-    })
-    if (validate.error) {
-        ctx.throw(400, validator.error.message)
+    const validator =  Joi.object(schama).validate(params,{ allowUnknown: true })
+    if (validator.error) {
         return false
     }
     return true

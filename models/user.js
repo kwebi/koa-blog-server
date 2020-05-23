@@ -23,5 +23,6 @@ module.exports = (sequelize, dataTypes) => {
             timestamps: true
         }
     )
+
     return User
 }
