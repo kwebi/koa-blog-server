@@ -4,6 +4,7 @@ const loadRouter = require('./routes')
 const cors = require('koa2-cors')
 const db = require('./models')
 const {PORT} = require('./config')
+const authHandler = require('./middlewares/authHandler')
 
 const app = new Koa()
 
@@ -14,7 +15,7 @@ Object.keys(context).forEach(key => {
 })
 
 //请求体解析中间件
-app.use(cors()).use(bodyParser())
+app.use(cors()).use(bodyParser()).use(authHandler)
 
 //加载全部路由
 loadRouter(app)

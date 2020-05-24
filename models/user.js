@@ -17,6 +17,10 @@ module.exports = (sequelize, dataTypes) => {
             password: {
                 type: dataTypes.STRING,
                 comment: '通过 bcrypt 加密后的密码' // 仅限站内注册用户
+            },
+            role: {
+                type: dataTypes.INTEGER(11),
+                defaultValue: 2
             }
         },
         {

@@ -2,7 +2,7 @@ var bcrypt = require('bcryptjs');
 
 exports.encrypt = password => {
     return new Promise((resolve, reject) => {
-        bcrypt.genSalt(10).then(salt => {
+        bcrypt.genSalt(7).then(salt => {
             bcrypt.hash(password, salt).then(hash => {
                 resolve(hash)
             }, err => {

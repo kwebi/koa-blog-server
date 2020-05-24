@@ -5,9 +5,9 @@ const {comment: CommentModel} = require('../models')
 class CommentController {
     static async create(ctx) {
         const validator = ctx.validate(ctx.request.body, {
-            articleId: Joi.number().required(),
+            articleId: Joi.number(),
             content: Joi.string().required(),
-            userId: Joi.number().required(),
+            userId: Joi.number(),
             commentId: Joi.number()
         })
         if (validator) {

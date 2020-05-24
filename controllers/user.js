@@ -1,5 +1,6 @@
 const Joi = require('@hapi/joi')
 const {encrypt,comparePassword} = require('../utils/bcrypt')
+const { createToken } = require('../utils/token')
 const { user: UserModel } = require('../models')
 
 
@@ -45,22 +46,18 @@ class UserController {
                 }
             })
             if (!user) {
-                ctx.body = {
-                    code: 403,
-                    errMsg:"用户不存在"
-                }
+                ctx.throw(403,"用户名或密码错误")
             }else {
                 const isMatch = await comparePassword(password,user.password)
                 if (!isMatch) {
-                    ctx.body = {
-                        code: 403,
-                        errMsg:"密码错误"
-                    }
+                    ctx.throw(403,"用户名或密码错误")
                 } else {
+                    const { id, role } = user
+                    const token = createToken({ username: user.username, userId: id, role }) // 生成 token
                     ctx.body = {
                         code:200,
                         data:{
-                            username: user.username
+                            username: user.username, role, userId: id, token
                         }
                     }
                 }

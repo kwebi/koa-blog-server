@@ -21,7 +21,10 @@ const config = {
             timezone: '+08:00'
         }
     },
-    SALT_WORK_FACTOR:"1213243249082"
+    TOKEN: {
+        secret: '&@OIFOIA012I+@I!3-?/`paf*)(-Ab,};%#iahr502', // secret is very important!
+        expiresIn: '3h' // token 有效期
+    },
 }
 
 module.exports = config
