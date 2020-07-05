@@ -3,7 +3,7 @@ const bodyParser = require('koa-bodyparser')
 const loadRouter = require('./routes')
 const cors = require('koa2-cors')
 const db = require('./models')
-const {PORT} = require('./config')
+const { PORT } = require('./config')
 const authHandler = require('./middlewares/authHandler')
 
 const app = new Koa()
@@ -22,7 +22,7 @@ loadRouter(app)
 
 app.listen(PORT, () => {
     db.sequelize
-        .sync({force: false}) // If force is true, each DAO will do DROP TABLE IF EXISTS ..., before it tries to create its own table
+        .sync({ force: false }) // If force is true, each DAO will do DROP TABLE IF EXISTS ..., before it tries to create its own table
         .then(async () => {
             console.log('sequelize connect success')
             console.log(`sever listen on http://127.0.0.1:${PORT}`)

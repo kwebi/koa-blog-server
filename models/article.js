@@ -4,24 +4,25 @@ module.exports = (sequelize, dataTypes) => {
         'article',
         {
             id: { type: dataTypes.INTEGER(11), primaryKey: true, autoIncrement: true },
-            title: { type: dataTypes.STRING(255), allowNull: false},
-            content: { type: dataTypes.TEXT, allowNull:false},
+            title: { type: dataTypes.STRING(255), allowNull: false },
+            content: { type: dataTypes.TEXT, allowNull: false },
             viewCount: { type: dataTypes.INTEGER(11), defaultValue: 0 }, // 阅读数
+            img: { type: dataTypes.STRING(255), allowNull: true },
             createdAt: {
                 type: dataTypes.BIGINT(11),
-                allowNull:false
+                allowNull: false
             },
             updatedAt: {
                 type: dataTypes.BIGINT(11),
-                allowNull:false
+                allowNull: false
             }
         }
 
     )
     Article.associate = models => {
-        Article.belongsTo(models.user,{
+        Article.belongsTo(models.user, {
             foreignKey: "userId",
-            constraints:false
+            constraints: false
         })
     }
     return Article
