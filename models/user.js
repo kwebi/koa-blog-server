@@ -21,6 +21,14 @@ module.exports = (sequelize, dataTypes) => {
             role: {
                 type: dataTypes.INTEGER(11),
                 defaultValue: 2
+            },
+            img: {
+                type: dataTypes.STRING(200),
+                allowNull: true
+            },
+            nickname: {
+                type: dataTypes.STRING(20),
+                allowNull: true
             }
         },
         {

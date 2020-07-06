@@ -17,8 +17,19 @@ Object.keys(context).forEach(key => {
 //请求体解析中间件
 app.use(cors()).use(bodyParser()).use(authHandler)
 
+app.use(async (ctx, next) => {
+    try {
+        await next()
+    } catch (err) {
+        ctx.response.status = err.statusCode || err.status || 500;
+        ctx.response.body = {
+            message: err.message
+        };
+    }
+});
 //加载全部路由
 loadRouter(app)
+
 
 app.listen(PORT, () => {
     db.sequelize

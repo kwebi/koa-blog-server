@@ -2,6 +2,7 @@ const Joi = require('@hapi/joi')
 
 const {
     article: ArticleModel,
+    user: UserModel
 } = require('../models')
 
 class ArticleController {
@@ -10,7 +11,8 @@ class ArticleController {
             authorId: Joi.number(),
             title: Joi.string().required(),
             content: Joi.string().required(),
-            img: Joi.string()
+            img: Joi.string(),
+            userId: Joi.number()
             //TODO 标签，分类等
         })
         if (validator) {
@@ -38,10 +40,35 @@ class ArticleController {
         if (validator) {
             const { offset = 0, limit = 6 } = ctx.query
             const data = await ArticleModel.findAll({ offset: +offset, limit: +limit })
+            const dataList = []
+            for (let i = 0; i < data.length; i++) {
+                const user = await UserModel.findOne({
+                    where: {
+                        id: data[i].userId
+                    }
+                })
+                const { id, title, content, viewCount, img, updatedAt, createdAt } = data[i]
+                const data1 = {
+                    id,
+                    title,
+                    content,
+                    viewCount,
+                    img,
+                    updatedAt,
+                    createdAt,
+                }
+                if (user) {
+                    Object.assign(data1, {
+                        author: user.nickname
+                    })
+                }
+                dataList.push(data1)
+            }
+
             ctx.body = {
                 code: 200,
                 data: {
-                    list: data
+                    list: dataList
                 }
             }
         } else {
@@ -62,9 +89,27 @@ class ArticleController {
             if (data.length === 0) {
                 ctx.throw(404, "无此文章")
             }
+            const user = await UserModel.findOne({
+                where: {
+                    id: data[0].userId
+                }
+            })
+            if (!user) {
+                ctx.throw(404, "非法作者")
+            }
+            const { id: id1, title, content, viewCount, img, updatedAt, createdAt } = data[0]
             ctx.body = {
                 code: 200,
-                data: data[0]
+                data: {
+                    id: id1,
+                    title,
+                    content,
+                    viewCount,
+                    img,
+                    updatedAt,
+                    createdAt,
+                    author: user.nickname
+                }
             }
         } else {
             ctx.throw(403, "请求失败")

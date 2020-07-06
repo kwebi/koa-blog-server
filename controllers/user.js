@@ -9,10 +9,12 @@ class UserController {
         const validator = ctx.validate(ctx.request.body, {
             username: Joi.string().required(),
             password: Joi.string().required(),
+            img: Joi.string(),
+            nickname: Joi.string()
         })
 
         if (validator) {
-            const { username, password } = ctx.request.body
+            const { username, password, img, nickname } = ctx.request.body
             const user = await UserModel.findOne({ where: { username } })
             if (user) {
                 ctx.body = {
@@ -21,9 +23,17 @@ class UserController {
                 }
             } else {
                 //加密后存入数据库
+                const allUsers = await UserModel.findAll({ where: { role: 1 } })
+                console.log(allUsers.length)
                 const saltPassword = await encrypt(password)
-                await UserModel.create({ username, password: saltPassword, role: 1 })
-                ctx.status = 204
+                if (allUsers.length === 0) {
+                    await UserModel.create({ username, password: saltPassword, img, nickname, role: 1 })
+                } else {
+                    //有超级用户则不允许注册
+                    ctx.body = {
+                        code: 200
+                    }
+                }
                 ctx.body = {
                     code: 200,
                 }
@@ -57,13 +67,95 @@ class UserController {
                     ctx.body = {
                         code: 200,
                         data: {
-                            username: user.username, role, userId: id, token
+                            username: user.username,
+                            role,
+                            userId: id,
+                            token,
+                            img: user.img,
+                            nickname: user.nickname
                         }
                     }
                 }
             }
         } else {
             //验证失败
+            ctx.throw(403, "请求失败")
+        }
+    }
+
+    static async getSetting(ctx) {
+        const validator = ctx.validate(ctx.params, {
+            id: Joi.number().min(1).required()
+        })
+        if (validator) {
+            const { id } = ctx.params
+            const user = await UserModel.findOne({
+                where: {
+                    id
+                }
+            })
+
+            const userInfo = { id: user.id, username: user.username, nickname: user.nickname, img: user.img };
+            ctx.body = {
+                code: 200,
+                data: {
+                    userInfo
+                }
+            }
+        } else {
+            ctx.throw(403, "请求失败")
+        }
+    }
+
+    static async setting(ctx) {
+        const validator = ctx.validate(ctx.request.body, {
+            password: Joi.string().required(),
+            password1: Joi.string().required(),
+            img: Joi.string(),
+            nickname: Joi.string(),
+        })
+        if (validator) {
+            const { password, password1, img, nickname } = ctx.request.body
+            const validator1 = ctx.validate(ctx.params, {
+                id: Joi.number().min(1)
+            })
+            if (!validator1) {
+                ctx.throw(403, "请求失败")
+            }
+            const { id } = ctx.params
+            const user = await UserModel.findOne({
+                where: {
+                    id
+                }
+            })
+            if (!user) {
+                ctx.throw(403, "用户不存在")
+            } else {
+                const isMatch = await comparePassword(password, user.password)
+                if (!isMatch) {
+                    ctx.throw(403, "密码错误")
+
+                } else {
+                    //加密后存入数据库
+                    const saltPassword = await encrypt(password1)
+                    UserModel.update({
+                        password: saltPassword,
+                        img,
+                        nickname
+                    }, {
+                        where: {
+                            id
+                        }
+                    })
+                    ctx.body = {
+                        code: 200,
+                        data: {
+                            msg: "修改成功"
+                        }
+                    }
+                }
+            }
+        } else {
             ctx.throw(403, "请求失败")
         }
     }

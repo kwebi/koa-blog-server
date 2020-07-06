@@ -23,7 +23,7 @@ exports.checkToken = (ctx, roleList = []) => {
             if (err) {
                 return false
             } else if (decoded) {
-                console.log(roleList,decoded)//TODO
+                //console.log(roleList,decoded)//TODO
                 return roleList.find(item => item.role === decoded.role)
             }
             return false

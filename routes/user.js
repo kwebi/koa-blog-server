@@ -1,5 +1,5 @@
 const Router = require("koa-router")
-const { register,defaultLogin } = require("../controllers/user")
+const { register, defaultLogin, setting, getSetting } = require("../controllers/user")
 
 const router = new Router()
 
@@ -9,6 +9,7 @@ const router = new Router()
  * @access 公开
  */
 router.post("/register", register)
-router.post("/login",defaultLogin)
-
+router.post("/login", defaultLogin)
+router.put("/user/:id", setting)
+router.get("/user/:id", getSetting)
 module.exports = router
