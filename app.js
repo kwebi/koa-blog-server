@@ -3,6 +3,7 @@ const bodyParser = require('koa-bodyparser')
 const loadRouter = require('./routes')
 const cors = require('koa2-cors')
 const db = require('./models')
+const logger = require('koa-logger')
 const { PORT } = require('./config')
 const authHandler = require('./middlewares/authHandler')
 
@@ -15,7 +16,7 @@ Object.keys(context).forEach(key => {
 })
 
 //请求体解析中间件
-app.use(cors()).use(bodyParser()).use(authHandler)
+app.use(cors()).use(bodyParser()).use(authHandler).use(logger())
 
 app.use(async (ctx, next) => {
     try {

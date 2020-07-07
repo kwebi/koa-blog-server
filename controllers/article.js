@@ -1,8 +1,9 @@
 const Joi = require('@hapi/joi')
-
+//const Sequelize = require('sequelize')
 const {
     article: ArticleModel,
-    user: UserModel
+    user: UserModel,
+    sequelize
 } = require('../models')
 
 class ArticleController {
@@ -73,6 +74,17 @@ class ArticleController {
             }
         } else {
             ctx.throw(403, "请求失败")
+        }
+    }
+    static async getHotArticles(ctx) {
+        const data = await ArticleModel.findAll({
+            order: sequelize.literal('viewCount DESC'),
+            offset: 0,
+            limit: 6
+        })
+        ctx.body = {
+            code: 200,
+            data: data
         }
     }
     static async getArticleById(ctx) {

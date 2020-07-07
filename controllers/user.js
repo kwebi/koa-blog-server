@@ -17,25 +17,19 @@ class UserController {
             const { username, password, img, nickname } = ctx.request.body
             const user = await UserModel.findOne({ where: { username } })
             if (user) {
-                ctx.body = {
-                    code: 403,
-                    errMsg: "用户已注册"
-                }
+                ctx.throw(403, "用户已注册")
             } else {
                 //加密后存入数据库
                 const allUsers = await UserModel.findAll({ where: { role: 1 } })
-                console.log(allUsers.length)
                 const saltPassword = await encrypt(password)
                 if (allUsers.length === 0) {
                     await UserModel.create({ username, password: saltPassword, img, nickname, role: 1 })
+                    ctx.body = {
+                        code: 200,
+                    }
                 } else {
                     //有超级用户则不允许注册
-                    ctx.body = {
-                        code: 200
-                    }
-                }
-                ctx.body = {
-                    code: 200,
+                    ctx.throw(403, "暂不允许注册")
                 }
             }
         } else {
