@@ -47,7 +47,7 @@ module.exports = async (ctx, next) => {
         if (checkToken(ctx, roleList)) {
             await next()
         } else {
-            ctx.throw(401)
+            ctx.throw(401, "登录已过期")
         }
     } else {
         await next()

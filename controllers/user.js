@@ -77,6 +77,20 @@ class UserController {
         }
     }
 
+    static async publicInfo(ctx) {
+        const user = await UserModel.findOne({ where: { role: 1 } })
+        const { img, nickname, id, like } = user
+        ctx.body = {
+            code: 200,
+            data: {
+                id,
+                nickname,
+                img,
+                like
+            }
+        }
+    }
+
     static async getSetting(ctx) {
         const validator = ctx.validate(ctx.params, {
             id: Joi.number().min(1).required()
