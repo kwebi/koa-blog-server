@@ -29,6 +29,11 @@ module.exports = (sequelize, dataTypes) => {
             nickname: {
                 type: dataTypes.STRING(20),
                 allowNull: true
+            },
+            like: {
+                type: dataTypes.INTEGER(11),
+                allowNull: true,
+                defaultValue: 0
             }
         },
         {

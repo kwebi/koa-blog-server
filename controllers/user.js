@@ -153,6 +153,26 @@ class UserController {
             ctx.throw(403, "请求失败")
         }
     }
+    static async like(ctx) {
+
+        const user = await UserModel.findOne({ where: { role: 1 } })
+        const data = await UserModel.update({ like: user.like + 1 }, {
+            where: {
+                id: user.id
+            }
+        })
+
+        ctx.body = {
+            code: 200
+        }
+    }
+    static async getLike(ctx) {
+        const user = await UserModel.findOne({ where: { role: 1 } })
+        ctx.body = {
+            code: 200,
+            data: user.like
+        }
+    }
 }
 
 module.exports = UserController
