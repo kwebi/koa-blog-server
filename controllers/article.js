@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi')
-//const Sequelize = require('sequelize')
+
 const {
     article: ArticleModel,
     user: UserModel,
@@ -66,10 +66,14 @@ class ArticleController {
                 dataList.push(data1)
             }
 
+            const total = await ArticleModel.findOne({
+                attributes: [[sequelize.fn('COUNT', sequelize.col('id')), 'total']]
+            })
             ctx.body = {
                 code: 200,
                 data: {
-                    list: dataList
+                    list: dataList,
+                    total: total
                 }
             }
         } else {
@@ -79,6 +83,7 @@ class ArticleController {
     static async getHotArticles(ctx) {
         const data = await ArticleModel.findAll({
             order: sequelize.literal('viewCount DESC'),
+            // order: sequelize.random(),
             offset: 0,
             limit: 6
         })
